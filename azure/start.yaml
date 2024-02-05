@@ -1,0 +1,19 @@
+version: '3'
+env:
+  MOUNTS: "-v /mnt/apixh:/mnt/apixh"
+tasks:
+  init_folder:
+    cmds:
+      - |
+        mkdir -p /Users/ericd/escloud/minikube_cli/minidata/az_data
+        sudo chown 999:999 /Users/ericd/escloud/minikube_cli/minidata/az_data
+        sudo chmod 777 /Users/ericd/escloud/minikube_cli/minidata/az_data
+  clear_folder:
+    cmds:
+      - |
+        rm -fr /Users/ericd/escloud/minikube_cli/minidata/az_data/*
+  start:
+    cmds:
+      - |
+        docker run -it -e AZURE_CONFIG_DIR=/mnt/az_data/.azure -v /mnt/minidata/az_data:/mnt/az_data {{.MOUNTS}} -v /var/run/docker.sock:/var/run/docker.sock my_az_cli
+        

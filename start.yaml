@@ -1,0 +1,28 @@
+version: '3'
+
+tasks:
+  initdirMySQL:
+    cmds:
+      - |
+        mkdir -p /Users/ericd/escloud/minikube_cli/minidata
+        sudo chown 999:999 /Users/ericd/escloud/minikube_cli/minidata
+        sudo chmod 777 /Users/ericd/escloud/minikube_cli/minidata
+        mkdir -p /Users/ericd/escloud/minikube_cli/minidata/mysql
+        sudo chown 999:999 /Users/ericd/escloud/minikube_cli/minidata/mysql
+        sudo chmod 777 /Users/ericd/escloud/minikube_cli/minidata/mysql
+  start:
+    cmds:
+      - |
+        minikube start --driver=hyperkit --disk-size=100GB --static-ip=192.168.64.8
+        minikube mount "/Users/ericd/escloud/apixh-github:/mnt/apixh" --uid 999 --gid 999 &
+        minikube mount "/Users/ericd/escloud/minikube_cli/minidata:/mnt/minidata" --uid 999 --gid 999
+  clearMySQL:
+    cmds:
+      - |
+        kubectl delete deployment mysql
+        kubectl delete PersistentVolumeClaim mysql-pv-claim
+        kubectl delete PersistentVolume mysql-pv-volume
+  initSvrMySQL:
+      - |
+        kubectl apply -f mysql/mysql-pv.yaml
+        kubectl apply -f mysql/mysql-deployment.yaml

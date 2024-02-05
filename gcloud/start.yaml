@@ -1,0 +1,19 @@
+version: '3'
+env:
+  MOUNTS: "-v /mnt/apixh:/mnt/apixh"
+tasks:
+  init_folder:
+    cmds:
+      - |
+        mkdir -p /Users/ericd/escloud/minikube_cli/minidata/gcloud_data
+        sudo chown 999:999 /Users/ericd/escloud/minikube_cli/minidata/gcloud_data
+        sudo chmod 777 /Users/ericd/escloud/minikube_cli/minidata/gcloud_data
+  clear_folder:
+    cmds:
+      - |
+        rm -fr /Users/ericd/escloud/minikube_cli/minidata/gcloud_data/*
+  start:
+    cmds:
+      - |
+        docker run -it -e CLOUDSDK_CONFIG=/mnt/gcloud_data/.config -v /mnt/minidata/gcloud_data:/mnt/gcloud_data {{.MOUNTS}} -v /var/run/docker.sock:/var/run/docker.sock my_gcloud_cli
+
